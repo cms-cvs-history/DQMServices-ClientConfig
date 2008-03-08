@@ -2,8 +2,8 @@
  *
  *  Implementation of QTestConfigure
  *
- *  $Date: 2008/02/21 03:26:45 $
- *  $Revision: 1.11 $
+ *  $Date: 2008/02/22 23:52:24 $
+ *  $Revision: 1.12 $
  *  \author Ilaria Segoni
  */
 #include "DQMServices/ClientConfig/interface/QTestConfigure.h"
@@ -23,21 +23,25 @@ bool QTestConfigure::enableTests(std::map<std::string, std::map<std::string, std
 		std::string testType = params["type"]; 
 
 		if(!std::strcmp(testType.c_str(),ContentsXRange::getAlgoName().c_str())) this->EnableXRangeTest(testName, params,bei);       
-		if(!std::strcmp(testType.c_str(),ContentsYRange::getAlgoName().c_str())) this->EnableYRangeTest(testName, params,bei);       
-		if(!std::strcmp(testType.c_str(),DeadChannel::getAlgoName().c_str()))   this->EnableDeadChannelTest(testName, params,bei);       
-		if(!std::strcmp(testType.c_str(),NoisyChannel::getAlgoName().c_str()))  this->EnableNoisyChannelTest(testName, params,bei);       
-		if(!std::strcmp(testType.c_str(),MeanWithinExpected::getAlgoName().c_str()))  this->EnableMeanWithinExpectedTest(testName, params,bei);       
-                if(!std::strcmp(testType.c_str(),MostProbableLandau::getAlgoName().c_str()))  this->EnableMostProbableLandauTest(testName, params, bei);
+	
+		//	if(!std::strcmp(testType.c_str(),ContentsYRange::getAlgoName().c_str())) this->EnableYRangeTest(testName, params,bei);       
+		//		if(!std::strcmp(testType.c_str(),DeadChannel::getAlgoName().c_str()))   this->EnableDeadChannelTest(testName, params,bei);       
+		//		if(!std::strcmp(testType.c_str(),NoisyChannel::getAlgoName().c_str()))  this->EnableNoisyChannelTest(testName, params,bei);       
+		//		if(!std::strcmp(testType.c_str(),MeanWithinExpected::getAlgoName().c_str()))  this->EnableMeanWithinExpectedTest(testName, params,bei);       
+		//  if(!std::strcmp(testType.c_str(),MostProbableLandau::getAlgoName().c_str()))  this->EnableMostProbableLandauTest(testName, params, bei);
 
-                if(!std::strcmp(testType.c_str(),ContentsTH2FWithinRange::getAlgoName().c_str())) this->EnableTH2FContentsInRangeTest(testName, params, bei);
-                if(!std::strcmp(testType.c_str(),ContentsProfWithinRange::getAlgoName().c_str())) this->EnableProfContentsInRangeTest(testName, params, bei);
-                if(!std::strcmp(testType.c_str(),ContentsProf2DWithinRange::getAlgoName().c_str())) this->EnableProf2DContentsInRangeTest(testName, params, bei);
+		// if(!std::strcmp(testType.c_str(),ContentsTH2FWithinRange::getAlgoName().c_str())) this->EnableTH2FContentsInRangeTest(testName, params, bei);
+		//  if(!std::strcmp(testType.c_str(),ContentsProfWithinRange::getAlgoName().c_str())) this->EnableProfContentsInRangeTest(testName, params, bei);
+
+		// if(!std::strcmp(testType.c_str(),ContentsProf2DWithinRange::getAlgoName().c_str())) this->EnableProf2DContentsInRangeTest(testName, params, bei);
+
+	if(!std::strcmp(testType.c_str(),Comp2RefEqualH1::getAlgoName().c_str())) this->EnableComp2RefEqualH1Test(testName, params,bei);
+
 
 	}
 	
 	return false;	
 }
-
 
 
 void QTestConfigure::EnableXRangeTest(std::string testName, std::map<std::string, std::string> params, DQMStore *bei){
@@ -62,6 +66,27 @@ void QTestConfigure::EnableXRangeTest(std::string testName, std::map<std::string
 	me_qc1->setErrorProb(error);
 }
 
+void QTestConfigure::EnableComp2RefEqualH1Test(std::string testName, std::map<std::string, std::string> params, DQMStore *bei){
+	QCriterion * qc1;	
+  	if(! bei->getQCriterion(testName) ){
+		testsConfigured.push_back(testName);
+		qc1 = bei->createQTest(Comp2RefEqualH1::getAlgoName(),testName);
+	}else{
+		qc1 = bei->getQCriterion(testName);
+		
+	}	
+	Comp2RefEqualH1 * me_qc1 = (Comp2RefEqualH1 *) qc1;
+	
+	double warning=atof(params["warning"].c_str());
+	double error=atof(params["error"].c_str());
+	me_qc1->setWarningProb(warning);
+	me_qc1->setErrorProb(error);
+}
+
+
+
+
+/*
 void QTestConfigure::EnableYRangeTest(std::string testName, std::map<std::string, std::string> params, DQMStore *bei){
 	QCriterion * qc1;	
   	if(! bei->getQCriterion(testName) ){
@@ -292,6 +317,7 @@ void QTestConfigure::EnableProf2DContentsInRangeTest(std::string testName, std::
         if ( minEntries != 0 ) me_qc1->setMinimumEntries(minEntries);
 
 }
+*/
 
 void QTestConfigure::disableTests(std::vector<std::string> testsOFFList, DQMStore *bei){
  std::vector<std::string>::iterator testsItr;

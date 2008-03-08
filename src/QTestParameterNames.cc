@@ -2,8 +2,8 @@
  *
  *  Implementation of QTestParameterNames 
  *
- *  $Date: 2008/01/11 15:47:42 $
- *  $Revision: 1.6 $
+ *  $Date: 2008/02/22 23:52:24 $
+ *  $Revision: 1.7 $
  *  \author Ilaria Segoni
  */
  
@@ -14,16 +14,20 @@
 
 QTestParameterNames::QTestParameterNames(){
 	
-	this->constructMap(ContentsXRangeROOT::getAlgoName(), "xmin", "xmax");
-	this->constructMap(ContentsYRangeROOT::getAlgoName(), "ymin", "ymax");
-	this->constructMap(DeadChannelROOT::getAlgoName(),   "threshold");
-	this->constructMap(NoisyChannelROOT::getAlgoName(),  "tolerance", "neighbours");
-	this->constructMap(MeanWithinExpectedROOT::getAlgoName(), "mean","useRMS","useSigma","useRange","xmin","xmax");
-        this->constructMap(MostProbableLandauROOT::getAlgoName(), "xmin", "xmax","normalization", "mostprobable", "sigma");
+this->constructMap(ContentsXRangeROOT::getAlgoName(), "xmin", "xmax");
+//this->constructMap(ContentsYRangeROOT::getAlgoName(), "ymin", "ymax");
+//this->constructMap(DeadChannelROOT::getAlgoName(),   "threshold");
+//this->constructMap(NoisyChannelROOT::getAlgoName(),  "tolerance", "neighbours");
+//this->constructMap(MeanWithinExpectedROOT::getAlgoName(), "mean","useRMS","useSigma","useRange","xmin","xmax");
+//this->constructMap(MostProbableLandauROOT::getAlgoName(), "xmin", "xmax","normalization", "mostprobable", "sigma");
 
-        this->constructMap(ContentsTH2FWithinRangeROOT::getAlgoName(), "minMean", "maxMean", "minRMS", "maxRMS", "toleranceMean", "minEntries");
-        this->constructMap(ContentsProfWithinRangeROOT::getAlgoName(), "minMean", "maxMean", "minRMS", "maxRMS", "toleranceMean", "minEntries");
-        this->constructMap(ContentsProf2DWithinRangeROOT::getAlgoName(), "minMean", "maxMean", "minRMS", "maxRMS", "toleranceMean", "minEntries");
+//this->constructMap(ContentsTH2FWithinRangeROOT::getAlgoName(), "minMean", "maxMean", "minRMS", "maxRMS", "toleranceMean", "minEntries");
+//this->constructMap(ContentsProfWithinRangeROOT::getAlgoName(), "minMean", "maxMean", "minRMS", "maxRMS", "toleranceMean", "minEntries");
+//this->constructMap(ContentsProf2DWithinRangeROOT::getAlgoName(), "minMean", "maxMean", "minRMS", "maxRMS", "toleranceMean", "minEntries");
+
+//== NEW
+this->constructMap(Comp2RefEqualH1ROOT::getAlgoName(), "testparam");
+
 
 }
   
