@@ -2,8 +2,8 @@
  *
  *  Implementation of  QTestHandle
  *
- *  $Date: 2008/02/25 16:46:30 $
- *  $Revision: 1.9 $
+ *  $Date: 2008/04/14 14:33:46 $
+ *  $Revision: 1.9.2.2 $
  *  \author Ilaria Segoni
  */
 
@@ -46,11 +46,7 @@ bool QTestHandle::configureTests(const std::string &configFile, DQMStore *bei)
     std::map<std::string, std::map<std::string, std::string> > testsONList
       = qtParser->testsList();
 
-    std::vector<std::string> testsOFFList
-      = qtParser->testsOff();
-
-    qtConfigurer->disableTests(testsOFFList,bei);
-    if (qtConfigurer->enableTests(testsONList,bei))
+    if (qtConfigurer->enableTests(testsONList,bei)) 
       return true;
   }
   else
