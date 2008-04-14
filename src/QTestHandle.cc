@@ -46,7 +46,12 @@ bool QTestHandle::configureTests(const std::string &configFile, DQMStore *bei)
     std::map<std::string, std::map<std::string, std::string> > testsONList
       = qtParser->testsList();
 
-    if (qtConfigurer->enableTests(testsONList,bei)) return true;
+    std::vector<std::string> testsOFFList
+      = qtParser->testsOff();
+
+    qtConfigurer->disableTests(testsOFFList,bei);
+    if (qtConfigurer->enableTests(testsONList,bei))
+      return true;
   }
   else
     return true;

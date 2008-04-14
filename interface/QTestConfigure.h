@@ -7,8 +7,8 @@
  *  the xml configuration file parsed by QTestConfigurationParser.
  *
  * 
- *  $Date: 2008/03/08 13:39:58 $
- *  $Revision: 1.8.2.1 $
+ *  $Date: 2008/02/22 23:52:23 $
+ *  $Revision: 1.8 $
  *  \author Ilaria Segoni
   */
 
@@ -29,6 +29,8 @@ class QTestConfigure{
   ~QTestConfigure(){}
   ///Creates and defines quality tests
   bool enableTests(std::map<std::string, std::map<std::string, std::string> > tests, DQMStore * bei); 
+  ///Disables the Quality Tests in the string list
+  void disableTests(std::vector<std::string> testsOFFList, DQMStore * bei);
   ///Returns the vector containing the names of the quality tests that have been created
   std::vector<std::string> testsReady(){return testsConfigured;}
  
@@ -37,9 +39,7 @@ class QTestConfigure{
   ///Creates ContentsXRangeROOT test
   void EnableXRangeTest(std::string testName, 
                         std::map<std::string, std::string>params,DQMStore * bei); 
- 
-  /*
- ///Creates ContentsYRangeROOT test
+  ///Creates ContentsYRangeROOT test
   void EnableYRangeTest(std::string testName, 
                         std::map<std::string, std::string>params,DQMStore * bei); 
    ///Creates DeadChannelROOT test
@@ -66,15 +66,10 @@ class QTestConfigure{
     /// Creates ContentsProf2DWithinRangeROOT test
   void EnableProf2DContentsInRangeTest(std::string testName,
                                        std::map<std::string,std::string> params,DQMStore * bei);
-  */
- 
-  void EnableComp2RefEqualH1Test(std::string testName, 
-                        std::map<std::string, std::string>params,DQMStore * bei); 
- 
 
 
-  private:
-   std::vector<std::string> testsConfigured;
+ private:
+  std::vector<std::string> testsConfigured;
  
 
 };

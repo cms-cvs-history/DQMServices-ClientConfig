@@ -34,6 +34,8 @@ class QTestConfigurationParser : public DQMParserBase {
 	 std::map<std::string, std::map<std::string, std::string> > testsList() const { return testsRequested;}		
 	 /// Returns the map between the MonitoElemnt and the list of tests requested for it
 	 std::map<std::string, std::vector<std::string> > meToTestsList() const { return mapMonitorElementTests;}		
+	 /// Returns the list of tests to disable (if existing)
+	 std::vector<std::string> testsOff() const { return testsToDisable;}		
 	
  private:	 
 	 bool qtestsConfig();
