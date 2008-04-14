@@ -2,8 +2,8 @@
  *
  *  Implementation of QTestConfigure
  *
- *  $Date: 2008/02/22 23:52:24 $
- *  $Revision: 1.12 $
+ *  $Date: 2008/03/08 13:39:59 $
+ *  $Revision: 1.12.2.1 $
  *  \author Ilaria Segoni
  */
 #include "DQMServices/ClientConfig/interface/QTestConfigure.h"
@@ -23,21 +23,16 @@ bool QTestConfigure::enableTests(std::map<std::string, std::map<std::string, std
 		std::string testType = params["type"]; 
 
 		if(!std::strcmp(testType.c_str(),ContentsXRange::getAlgoName().c_str())) this->EnableXRangeTest(testName, params,bei);       
-	
-		//	if(!std::strcmp(testType.c_str(),ContentsYRange::getAlgoName().c_str())) this->EnableYRangeTest(testName, params,bei);       
-		//		if(!std::strcmp(testType.c_str(),DeadChannel::getAlgoName().c_str()))   this->EnableDeadChannelTest(testName, params,bei);       
-		//		if(!std::strcmp(testType.c_str(),NoisyChannel::getAlgoName().c_str()))  this->EnableNoisyChannelTest(testName, params,bei);       
-		//		if(!std::strcmp(testType.c_str(),MeanWithinExpected::getAlgoName().c_str()))  this->EnableMeanWithinExpectedTest(testName, params,bei);       
-		//  if(!std::strcmp(testType.c_str(),MostProbableLandau::getAlgoName().c_str()))  this->EnableMostProbableLandauTest(testName, params, bei);
+		if(!std::strcmp(testType.c_str(),ContentsYRange::getAlgoName().c_str())) this->EnableYRangeTest(testName, params,bei);       
+		if(!std::strcmp(testType.c_str(),DeadChannel::getAlgoName().c_str()))   this->EnableDeadChannelTest(testName, params,bei);       
+		if(!std::strcmp(testType.c_str(),NoisyChannel::getAlgoName().c_str()))  this->EnableNoisyChannelTest(testName, params,bei);       
+		if(!std::strcmp(testType.c_str(),MeanWithinExpected::getAlgoName().c_str()))  this->EnableMeanWithinExpectedTest(testName, params,bei);       
+/*                if(!std::strcmp(testType.c_str(),MostProbableLandau::getAlgoName().c_str()))  this->EnableMostProbableLandauTest(testName, params, bei);
 
-		// if(!std::strcmp(testType.c_str(),ContentsTH2FWithinRange::getAlgoName().c_str())) this->EnableTH2FContentsInRangeTest(testName, params, bei);
-		//  if(!std::strcmp(testType.c_str(),ContentsProfWithinRange::getAlgoName().c_str())) this->EnableProfContentsInRangeTest(testName, params, bei);
-
-		// if(!std::strcmp(testType.c_str(),ContentsProf2DWithinRange::getAlgoName().c_str())) this->EnableProf2DContentsInRangeTest(testName, params, bei);
-
-	if(!std::strcmp(testType.c_str(),Comp2RefEqualH1::getAlgoName().c_str())) this->EnableComp2RefEqualH1Test(testName, params,bei);
-
-
+                if(!std::strcmp(testType.c_str(),ContentsTH2FWithinRange::getAlgoName().c_str())) this->EnableTH2FContentsInRangeTest(testName, params, bei);
+                if(!std::strcmp(testType.c_str(),ContentsProfWithinRange::getAlgoName().c_str())) this->EnableProfContentsInRangeTest(testName, params, bei);
+                if(!std::strcmp(testType.c_str(),ContentsProf2DWithinRange::getAlgoName().c_str())) this->EnableProf2DContentsInRangeTest(testName, params, bei);
+*/
 	}
 	
 	return false;	
@@ -192,7 +187,7 @@ void QTestConfigure::EnableMeanWithinExpectedTest(std::string testName, std::map
 	
 	
 }
-
+/*
 void QTestConfigure::EnableMostProbableLandauTest( 
        const std::string                        &roTEST_NAME,
        std::map<std::string, std::string> &roMParams,
@@ -318,14 +313,3 @@ void QTestConfigure::EnableProf2DContentsInRangeTest(std::string testName, std::
 
 }
 */
-
-void QTestConfigure::disableTests(std::vector<std::string> testsOFFList, DQMStore *bei){
- std::vector<std::string>::iterator testsItr;
- for(testsItr= testsOFFList.begin(); testsItr != testsOFFList.end();++testsItr){ 
-	if( bei->getQCriterion(*testsItr) ){
-		QCriterion * qc1=bei->getQCriterion(*testsItr);
-		qc1->disable();	
-	}  
- }
-
-}
