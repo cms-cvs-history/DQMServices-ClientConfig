@@ -2,8 +2,8 @@
  *
  *  Implementation of QTestConfigure
  *
- *  $Date: 2008/04/14 14:33:46 $
- *  $Revision: 1.12.2.3 $
+ *  $Date: 2008/04/15 13:08:33 $
+ *  $Revision: 1.12.2.4 $
  *  \author Ilaria Segoni
  */
 #include "DQMServices/ClientConfig/interface/QTestConfigure.h"
@@ -28,7 +28,7 @@ bool QTestConfigure::enableTests(std::map<std::string, std::map<std::string, std
 		if(!std::strcmp(testType.c_str(),NoisyChannel::getAlgoName().c_str()))  this->EnableNoisyChannelTest(testName, params,bei);       
 		if(!std::strcmp(testType.c_str(),MeanWithinExpected::getAlgoName().c_str()))  this->EnableMeanWithinExpectedTest(testName, params,bei);     
 
-		//=======================-------=== new qtests in the parser =====================================================================//
+		//================================== new qtests in the parser =============================================================//
                 if(!std::strcmp(testType.c_str(),Comp2RefEqualH::getAlgoName().c_str())) this->EnableComp2RefEqualHTest(testName, params,bei);
                 if(!std::strcmp(testType.c_str(),  Comp2RefChi2::getAlgoName().c_str())) this->EnableComp2RefChi2Test(testName, params,bei); 
                 if(!std::strcmp(testType.c_str(),Comp2RefKolmogorov::getAlgoName().c_str())) this->EnableComp2RefKolmogorovTest(testName, params,bei);
