@@ -1,0 +1,12 @@
+In order to test a specific quality test :
+copy the corresponding XML file (QT_***.xml) 
+to Examples/test/QualityTests.xml
+i.e.
+ClientConfig/XMLfiles > cp QT_***.xml ../../Examples/test/QualityTests.xml
+
+For "Comp2RefEqualH"  quality test, there are 3 XML files:
+"QT_Comp2RefEqualH1.xml" => to test TH1F
+"QT_Comp2RefEqualH2.xml" => to test TH2F
+"QT_Comp2RefEqualH3.xml" => to test TH3F  
+
+ 
