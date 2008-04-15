@@ -2,8 +2,8 @@
  *
  *  Implementation of QTestConfigure
  *
- *  $Date: 2008/02/22 23:52:24 $
- *  $Revision: 1.12 $
+ *  $Date: 2008/04/14 14:33:46 $
+ *  $Revision: 1.12.2.3 $
  *  \author Ilaria Segoni
  */
 #include "DQMServices/ClientConfig/interface/QTestConfigure.h"
@@ -26,7 +26,16 @@ bool QTestConfigure::enableTests(std::map<std::string, std::map<std::string, std
 		if(!std::strcmp(testType.c_str(),ContentsYRange::getAlgoName().c_str())) this->EnableYRangeTest(testName, params,bei);       
 		if(!std::strcmp(testType.c_str(),DeadChannel::getAlgoName().c_str()))   this->EnableDeadChannelTest(testName, params,bei);       
 		if(!std::strcmp(testType.c_str(),NoisyChannel::getAlgoName().c_str()))  this->EnableNoisyChannelTest(testName, params,bei);       
-		if(!std::strcmp(testType.c_str(),MeanWithinExpected::getAlgoName().c_str()))  this->EnableMeanWithinExpectedTest(testName, params,bei);       
+		if(!std::strcmp(testType.c_str(),MeanWithinExpected::getAlgoName().c_str()))  this->EnableMeanWithinExpectedTest(testName, params,bei);     
+
+		//=======================-------=== new qtests in the parser =====================================================================//
+                if(!std::strcmp(testType.c_str(),Comp2RefEqualH::getAlgoName().c_str())) this->EnableComp2RefEqualHTest(testName, params,bei);
+                if(!std::strcmp(testType.c_str(),  Comp2RefChi2::getAlgoName().c_str())) this->EnableComp2RefChi2Test(testName, params,bei); 
+                if(!std::strcmp(testType.c_str(),Comp2RefKolmogorov::getAlgoName().c_str())) this->EnableComp2RefKolmogorovTest(testName, params,bei);
+
+
+
+  
 /*                if(!std::strcmp(testType.c_str(),MostProbableLandau::getAlgoName().c_str()))  this->EnableMostProbableLandauTest(testName, params, bei);
 
                 if(!std::strcmp(testType.c_str(),ContentsTH2FWithinRange::getAlgoName().c_str())) this->EnableTH2FContentsInRangeTest(testName, params, bei);
@@ -40,6 +49,60 @@ bool QTestConfigure::enableTests(std::map<std::string, std::map<std::string, std
 }
 
 
+
+void QTestConfigure::EnableComp2RefEqualHTest(std::string testName, std::map<std::string, std::string> params, DQMStore *bei){
+	QCriterion * qc1;	
+  	if(! bei->getQCriterion(testName) ){
+		testsConfigured.push_back(testName);
+		qc1 = bei->createQTest(Comp2RefEqualH::getAlgoName(),testName);
+	}else{
+		qc1 = bei->getQCriterion(testName);
+		
+	}	
+	Comp2RefEqualH * me_qc1 = (Comp2RefEqualH *) qc1;
+	
+	double warning=atof(params["warning"].c_str());
+	double error=atof(params["error"].c_str());
+	me_qc1->setWarningProb(warning);
+	me_qc1->setErrorProb(error);
+}
+
+
+
+void QTestConfigure::EnableComp2RefChi2Test(std::string testName, std::map<std::string, std::string> params, DQMStore *bei){
+	QCriterion * qc1;	
+  	if(! bei->getQCriterion(testName) ){
+		testsConfigured.push_back(testName);
+		qc1 = bei->createQTest(Comp2RefChi2::getAlgoName(),testName);
+	}else{
+		qc1 = bei->getQCriterion(testName);
+		
+	}	
+	Comp2RefChi2 * me_qc1 = (Comp2RefChi2 *) qc1;
+	
+	double warning=atof(params["warning"].c_str());
+	double error=atof(params["error"].c_str());
+	me_qc1->setWarningProb(warning);
+	me_qc1->setErrorProb(error);
+}
+
+
+void QTestConfigure::EnableComp2RefKolmogorovTest(std::string testName, std::map<std::string, std::string> params, DQMStore *bei){
+	QCriterion * qc1;	
+  	if(! bei->getQCriterion(testName) ){
+		testsConfigured.push_back(testName);
+		qc1 = bei->createQTest(Comp2RefKolmogorov::getAlgoName(),testName);
+	}else{
+		qc1 = bei->getQCriterion(testName);
+		
+	}	
+	Comp2RefKolmogorov * me_qc1 = (Comp2RefKolmogorov *) qc1;
+	
+	double warning=atof(params["warning"].c_str());
+	double error=atof(params["error"].c_str());
+	me_qc1->setWarningProb(warning);
+	me_qc1->setErrorProb(error);
+}
 
 void QTestConfigure::EnableXRangeTest(std::string testName, std::map<std::string, std::string> params, DQMStore *bei){
 	QCriterion * qc1;	

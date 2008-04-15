@@ -2,8 +2,8 @@
  *
  *  Implementation of QTestParameterNames 
  *
- *  $Date: 2008/02/22 23:52:24 $
- *  $Revision: 1.7 $
+ *  $Date: 2008/04/14 14:33:46 $
+ *  $Revision: 1.7.2.3 $
  *  \author Ilaria Segoni
  */
  
@@ -19,6 +19,12 @@ QTestParameterNames::QTestParameterNames(){
 	this->constructMap(DeadChannelROOT::getAlgoName(),   "threshold");
 	this->constructMap(NoisyChannelROOT::getAlgoName(),  "tolerance", "neighbours");
 	this->constructMap(MeanWithinExpectedROOT::getAlgoName(), "mean","useRMS","useSigma","useRange","xmin","xmax");
+
+	//======================== new quality tests in the parser =====================//
+        this->constructMap(Comp2RefEqualHROOT::getAlgoName(), "testparam");
+        this->constructMap(Comp2RefChi2ROOT::getAlgoName(), "testparam");
+        this->constructMap(Comp2RefKolmogorovROOT::getAlgoName(), "testparam");
+
 //        this->constructMap(MostProbableLandauROOT::getAlgoName(), "xmin", "xmax","normalization", "mostprobable", "sigma");
 //        this->constructMap(ContentsTH2FWithinRangeROOT::getAlgoName(), "minMean", "maxMean", "minRMS", "maxRMS", "toleranceMean", "minEntries");
 //        this->constructMap(ContentsProfWithinRangeROOT::getAlgoName(), "minMean", "maxMean", "minRMS", "maxRMS", "toleranceMean", "minEntries");

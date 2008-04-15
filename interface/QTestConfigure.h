@@ -7,8 +7,8 @@
  *  the xml configuration file parsed by QTestConfigurationParser.
  *
  * 
- *  $Date: 2008/02/22 23:52:23 $
- *  $Revision: 1.8 $
+ *  $Date: 2008/04/14 14:35:22 $
+ *  $Revision: 1.8.2.3 $
  *  \author Ilaria Segoni
   */
 
@@ -51,6 +51,21 @@ class QTestConfigure{
     ///Creates MeanWithinExpectedROOT test
   void EnableMeanWithinExpectedTest(std::string testName, 
                                     std::map<std::string,std::string> params,DQMStore * bei);
+
+  //===================== new quality tests in the parser =============================//
+///Creates Comp2RefEqualH test
+ void EnableComp2RefEqualHTest(std::string testName, 
+                     std::map<std::string, std::string>params,DQMStore * bei); 
+
+///Creates Comp2RefChi2 test
+ void EnableComp2RefChi2Test(std::string testName, 
+                     std::map<std::string, std::string>params,DQMStore * bei); 
+
+ ///Creates EnableComp2RefKolmogorov test
+ void EnableComp2RefKolmogorovTest(std::string testName, 
+                     std::map<std::string, std::string>params,DQMStore * bei); 
+
+  /*
     ///Creates MostProbableLandauROOT test
   void EnableMostProbableLandauTest( const std::string &roTEST_NAME,
                                      std::map<std::string, std::string> &roMParams, DQMStore *bei);
@@ -66,6 +81,9 @@ class QTestConfigure{
     /// Creates ContentsProf2DWithinRangeROOT test
   void EnableProf2DContentsInRangeTest(std::string testName,
                                        std::map<std::string,std::string> params,DQMStore * bei);
+  */
+
+
 
 
  private:
