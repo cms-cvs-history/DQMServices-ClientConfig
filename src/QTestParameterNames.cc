@@ -2,8 +2,8 @@
  *
  *  Implementation of QTestParameterNames 
  *
- *  $Date: 2008/04/14 14:33:46 $
- *  $Revision: 1.7.2.3 $
+ *  $Date: 2008/04/15 13:08:33 $
+ *  $Revision: 1.7.2.4 $
  *  \author Ilaria Segoni
  */
  
@@ -26,9 +26,7 @@ QTestParameterNames::QTestParameterNames(){
         this->constructMap(Comp2RefKolmogorovROOT::getAlgoName(), "testparam");
 
 //        this->constructMap(MostProbableLandauROOT::getAlgoName(), "xmin", "xmax","normalization", "mostprobable", "sigma");
-//        this->constructMap(ContentsTH2FWithinRangeROOT::getAlgoName(), "minMean", "maxMean", "minRMS", "maxRMS", "toleranceMean", "minEntries");
-//        this->constructMap(ContentsProfWithinRangeROOT::getAlgoName(), "minMean", "maxMean", "minRMS", "maxRMS", "toleranceMean", "minEntries");
-//        this->constructMap(ContentsProf2DWithinRangeROOT::getAlgoName(), "minMean", "maxMean", "minRMS", "maxRMS", "toleranceMean", "minEntries");
+        this->constructMap(ContentsWithinExpectedROOT::getAlgoName(), "minMean", "maxMean", "minRMS", "maxRMS", "toleranceMean", "minEntries");
 
 }
   

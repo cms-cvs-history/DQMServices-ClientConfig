@@ -2,8 +2,8 @@
  *
  *  Implementation of QTestConfigure
  *
- *  $Date: 2008/04/15 13:08:33 $
- *  $Revision: 1.12.2.4 $
+ *  $Date: 2008/04/15 13:15:27 $
+ *  $Revision: 1.12.2.5 $
  *  \author Ilaria Segoni
  */
 #include "DQMServices/ClientConfig/interface/QTestConfigure.h"
@@ -36,12 +36,11 @@ bool QTestConfigure::enableTests(std::map<std::string, std::map<std::string, std
 
 
   
-/*                if(!std::strcmp(testType.c_str(),MostProbableLandau::getAlgoName().c_str()))  this->EnableMostProbableLandauTest(testName, params, bei);
-
-                if(!std::strcmp(testType.c_str(),ContentsTH2FWithinRange::getAlgoName().c_str())) this->EnableTH2FContentsInRangeTest(testName, params, bei);
-                if(!std::strcmp(testType.c_str(),ContentsProfWithinRange::getAlgoName().c_str())) this->EnableProfContentsInRangeTest(testName, params, bei);
-                if(!std::strcmp(testType.c_str(),ContentsProf2DWithinRange::getAlgoName().c_str())) this->EnableProf2DContentsInRangeTest(testName, params, bei);
+/*
+                if(!std::strcmp(testType.c_str(),MostProbableLandau::getAlgoName().c_str()))  this->EnableMostProbableLandauTest(testName, params, bei);
 */
+
+                if(!std::strcmp(testType.c_str(),ContentsWithinExpected::getAlgoName().c_str())) this->EnableContentsWithinExpectedTest(testName, params, bei);
 
 	}
 	
@@ -260,100 +259,36 @@ void QTestConfigure::EnableMostProbableLandauTest(
   poQTest->setMostProbable ( atof( roMParams["mostprobable"].c_str()) );
   poQTest->setSigma        ( atof( roMParams["sigma"].c_str()) );
 }
-
-void QTestConfigure::EnableTH2FContentsInRangeTest(std::string testName, std::map<std::string, std::string> params, DQMStore *bei){
-
-        QCriterion * qc1;
-        if(! bei->getQCriterion(testName) ){
-                testsConfigured.push_back(testName);
-                qc1 = bei->createQTest(ContentsTH2FWithinRange::getAlgoName(),testName);
-        }else{
-                qc1 = bei->getQCriterion(testName);
-        }
-        ContentsTH2FWithinRange * me_qc1 = (ContentsTH2FWithinRange *) qc1;
-
-        double warning=atof(params["warning"].c_str());
-        double error=atof(params["error"].c_str());
-        me_qc1->setWarningProb(warning);
-        me_qc1->setErrorProb(error);
-
-        double minMean=atof(params["minMean"].c_str());
-        double maxMean=atof(params["maxMean"].c_str());
-        if ( minMean != 0 || maxMean != 0 ) me_qc1->setMeanRange(minMean, maxMean);
-
-        double minRMS=atof(params["minRMS"].c_str());
-        double maxRMS=atof(params["maxRMS"].c_str());
-        if ( minRMS != 0 || maxRMS != 0 ) me_qc1->setMeanRange(minRMS, maxRMS);
-
-        double toleranceMean=atof(params["toleranceMean"].c_str());
-        if ( toleranceMean != 0 ) me_qc1->setMeanTolerance(toleranceMean);
-
-        int minEntries=atoi(params["minEntries"].c_str());
-        if ( minEntries != 0 ) me_qc1->setMinimumEntries(minEntries);
-
-}
-
-void QTestConfigure::EnableProfContentsInRangeTest(std::string testName, std::map<std::string, std::string> params, DQMStore *bei){
-
-        QCriterion * qc1;
-        if(! bei->getQCriterion(testName) ){
-                testsConfigured.push_back(testName);
-                qc1 = bei->createQTest(ContentsProfWithinRange::getAlgoName(),testName);
-        }else{
-                qc1 = bei->getQCriterion(testName);
-        }
-        ContentsProfWithinRange * me_qc1 = (ContentsProfWithinRange *) qc1;
-
-        double warning=atof(params["warning"].c_str());
-        double error=atof(params["error"].c_str());
-        me_qc1->setWarningProb(warning);
-        me_qc1->setErrorProb(error);
-
-        double minMean=atof(params["minMean"].c_str());
-        double maxMean=atof(params["maxMean"].c_str());
-        if ( minMean != 0 || maxMean != 0 ) me_qc1->setMeanRange(minMean, maxMean);
-
-        double minRMS=atof(params["minRMS"].c_str());
-        double maxRMS=atof(params["maxRMS"].c_str());
-        if ( minRMS != 0 || maxRMS != 0 ) me_qc1->setMeanRange(minRMS, maxRMS);
-
-        double toleranceMean=atof(params["toleranceMean"].c_str());
-        if ( toleranceMean != 0 ) me_qc1->setMeanTolerance(toleranceMean);
-
-        int minEntries=atoi(params["minEntries"].c_str());
-        if ( minEntries != 0 ) me_qc1->setMinimumEntries(minEntries);
-
-}
-
-void QTestConfigure::EnableProf2DContentsInRangeTest(std::string testName, std::map<std::string, std::string> params, DQMStore *bei){
-
-        QCriterion * qc1;
-        if(! bei->getQCriterion(testName) ){
-                testsConfigured.push_back(testName);
-                qc1 = bei->createQTest(ContentsProf2DWithinRange::getAlgoName(),testName);
-        }else{
-                qc1 = bei->getQCriterion(testName);
-        }
-        ContentsProf2DWithinRange * me_qc1 = (ContentsProf2DWithinRange *) qc1;
-
-        double warning=atof(params["warning"].c_str());
-        double error=atof(params["error"].c_str());
-        me_qc1->setWarningProb(warning);
-        me_qc1->setErrorProb(error);
-
-        double minMean=atof(params["minMean"].c_str());
-        double maxMean=atof(params["maxMean"].c_str());
-        if ( minMean != 0 || maxMean != 0 ) me_qc1->setMeanRange(minMean, maxMean);
-
-        double minRMS=atof(params["minRMS"].c_str());
-        double maxRMS=atof(params["maxRMS"].c_str());
-        if ( minRMS != 0 || maxRMS != 0 ) me_qc1->setMeanRange(minRMS, maxRMS);
-
-        double toleranceMean=atof(params["toleranceMean"].c_str());
-        if ( toleranceMean != 0 ) me_qc1->setMeanTolerance(toleranceMean);
-
-        int minEntries=atoi(params["minEntries"].c_str());
-        if ( minEntries != 0 ) me_qc1->setMinimumEntries(minEntries);
-
-}
 */
+void QTestConfigure::EnableContentsWithinExpectedTest(std::string testName, std::map<std::string, std::string> params, DQMStore *bei){
+
+        QCriterion * qc1;
+        if(! bei->getQCriterion(testName) ){
+                testsConfigured.push_back(testName);
+                qc1 = bei->createQTest(ContentsWithinExpected::getAlgoName(),testName);
+        }else{
+                qc1 = bei->getQCriterion(testName);
+        }
+        ContentsWithinExpected * me_qc1 = (ContentsWithinExpected *) qc1;
+
+        double warning=atof(params["warning"].c_str());
+        double error=atof(params["error"].c_str());
+        me_qc1->setWarningProb(warning);
+        me_qc1->setErrorProb(error);
+
+        double minMean=atof(params["minMean"].c_str());
+        double maxMean=atof(params["maxMean"].c_str());
+        if ( minMean != 0 || maxMean != 0 ) me_qc1->setMeanRange(minMean, maxMean);
+
+        double minRMS=atof(params["minRMS"].c_str());
+        double maxRMS=atof(params["maxRMS"].c_str());
+        if ( minRMS != 0 || maxRMS != 0 ) me_qc1->setRMSRange(minRMS, maxRMS);
+
+        double toleranceMean=atof(params["toleranceMean"].c_str());
+        if ( toleranceMean != 0 ) me_qc1->setMeanTolerance(toleranceMean);
+
+        int minEntries=atoi(params["minEntries"].c_str());
+        if ( minEntries != 0 ) me_qc1->setMinimumEntries(minEntries);
+
+}
+

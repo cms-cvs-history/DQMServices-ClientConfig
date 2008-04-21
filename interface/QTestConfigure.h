@@ -7,8 +7,8 @@
  *  the xml configuration file parsed by QTestConfigurationParser.
  *
  * 
- *  $Date: 2008/04/14 14:35:22 $
- *  $Revision: 1.8.2.3 $
+ *  $Date: 2008/04/15 13:08:32 $
+ *  $Revision: 1.8.2.4 $
  *  \author Ilaria Segoni
   */
 
@@ -69,21 +69,11 @@ class QTestConfigure{
     ///Creates MostProbableLandauROOT test
   void EnableMostProbableLandauTest( const std::string &roTEST_NAME,
                                      std::map<std::string, std::string> &roMParams, DQMStore *bei);
-
-    /// Creates ContentsTH2FWithinRangeROOT test
-  void EnableTH2FContentsInRangeTest(std::string testName,
-                                     std::map<std::string,std::string> params,DQMStore * bei);
-
-    /// Creates ContentsProfWithinRangeROOT test
-  void EnableProfContentsInRangeTest(std::string testName,
-                                     std::map<std::string,std::string> params,DQMStore * bei);
-
-    /// Creates ContentsProf2DWithinRangeROOT test
-  void EnableProf2DContentsInRangeTest(std::string testName,
-                                       std::map<std::string,std::string> params,DQMStore * bei);
   */
 
-
+    /// Creates ContentsWithinRangeROOT test
+  void EnableContentsWithinExpectedTest(std::string testName,
+                                        std::map<std::string,std::string> params,DQMStore * bei);
 
 
  private:
