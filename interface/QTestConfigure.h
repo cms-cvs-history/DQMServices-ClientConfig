@@ -7,8 +7,8 @@
  *  the xml configuration file parsed by QTestConfigurationParser.
  *
  * 
- *  $Date: 2008/04/15 13:08:32 $
- *  $Revision: 1.8.2.4 $
+ *  $Date: 2008/04/21 11:59:45 $
+ *  $Revision: 1.8.2.5 $
  *  \author Ilaria Segoni
   */
 
@@ -39,8 +39,14 @@ class QTestConfigure{
   ///Creates ContentsXRangeROOT test
   void EnableXRangeTest(std::string testName, 
                         std::map<std::string, std::string>params,DQMStore * bei); 
+  ///Creates ContentsXRangeASROOT test
+  void EnableXRangeASTest(std::string testName, 
+                        std::map<std::string, std::string>params,DQMStore * bei); 
   ///Creates ContentsYRangeROOT test
   void EnableYRangeTest(std::string testName, 
+                        std::map<std::string, std::string>params,DQMStore * bei); 
+  ///Creates ContentsYRangeASROOT test
+  void EnableYRangeASTest(std::string testName, 
                         std::map<std::string, std::string>params,DQMStore * bei); 
    ///Creates DeadChannelROOT test
   void EnableDeadChannelTest(std::string testName, 
@@ -73,6 +79,10 @@ class QTestConfigure{
 
     /// Creates ContentsWithinRangeROOT test
   void EnableContentsWithinExpectedTest(std::string testName,
+                                        std::map<std::string,std::string> params,DQMStore * bei);
+
+    /// Creates ContentsWithinRangeROOT test
+  void EnableContentsWithinExpectedASTest(std::string testName,
                                         std::map<std::string,std::string> params,DQMStore * bei);
 
 

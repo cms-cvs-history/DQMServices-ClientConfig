@@ -2,8 +2,8 @@
  *
  *  Implementation of QTestParameterNames 
  *
- *  $Date: 2008/04/15 13:08:33 $
- *  $Revision: 1.7.2.4 $
+ *  $Date: 2008/04/21 11:59:45 $
+ *  $Revision: 1.7.2.5 $
  *  \author Ilaria Segoni
  */
  
@@ -15,7 +15,9 @@
 QTestParameterNames::QTestParameterNames(){
 	
 	this->constructMap(ContentsXRangeROOT::getAlgoName(), "xmin", "xmax");
+	this->constructMap(ContentsXRangeASROOT::getAlgoName(), "xmin", "xmax");
 	this->constructMap(ContentsYRangeROOT::getAlgoName(), "ymin", "ymax");
+	this->constructMap(ContentsYRangeASROOT::getAlgoName(), "ymin", "ymax");
 	this->constructMap(DeadChannelROOT::getAlgoName(),   "threshold");
 	this->constructMap(NoisyChannelROOT::getAlgoName(),  "tolerance", "neighbours");
 	this->constructMap(MeanWithinExpectedROOT::getAlgoName(), "mean","useRMS","useSigma","useRange","xmin","xmax");
@@ -27,6 +29,7 @@ QTestParameterNames::QTestParameterNames(){
 
 //        this->constructMap(MostProbableLandauROOT::getAlgoName(), "xmin", "xmax","normalization", "mostprobable", "sigma");
         this->constructMap(ContentsWithinExpectedROOT::getAlgoName(), "minMean", "maxMean", "minRMS", "maxRMS", "toleranceMean", "minEntries");
+        this->constructMap(ContentsWithinExpectedASROOT::getAlgoName(), "minCont", "maxCont"); 
 
 }
   
