@@ -2,8 +2,8 @@
  *
  *  Implementation of QTestParameterNames 
  *
- *  $Date: 2008/04/21 11:59:45 $
- *  $Revision: 1.7.2.5 $
+ *  $Date: 2008/05/14 12:38:47 $
+ *  $Revision: 1.8 $
  *  \author Ilaria Segoni
  */
  
@@ -15,9 +15,7 @@
 QTestParameterNames::QTestParameterNames(){
 	
 	this->constructMap(ContentsXRangeROOT::getAlgoName(), "xmin", "xmax");
-	this->constructMap(ContentsXRangeASROOT::getAlgoName(), "xmin", "xmax");
-	this->constructMap(ContentsYRangeROOT::getAlgoName(), "ymin", "ymax");
-	this->constructMap(ContentsYRangeASROOT::getAlgoName(), "ymin", "ymax");
+	this->constructMap(ContentsYRangeROOT::getAlgoName(), "ymin", "ymax","normalTest");
 	this->constructMap(DeadChannelROOT::getAlgoName(),   "threshold");
 	this->constructMap(NoisyChannelROOT::getAlgoName(),  "tolerance", "neighbours");
 	this->constructMap(MeanWithinExpectedROOT::getAlgoName(), "mean","useRMS","useSigma","useRange","xmin","xmax");
@@ -28,8 +26,8 @@ QTestParameterNames::QTestParameterNames(){
         this->constructMap(Comp2RefKolmogorovROOT::getAlgoName(), "testparam");
 
 //        this->constructMap(MostProbableLandauROOT::getAlgoName(), "xmin", "xmax","normalization", "mostprobable", "sigma");
-        this->constructMap(ContentsWithinExpectedROOT::getAlgoName(), "minMean", "maxMean", "minRMS", "maxRMS", "toleranceMean", "minEntries");
-        this->constructMap(ContentsWithinExpectedASROOT::getAlgoName(), "minCont", "maxCont"); 
+        this->constructMap(ContentsWithinExpectedROOT::getAlgoName(), "minMean", "maxMean", "minRMS", "maxRMS", "toleranceMean", "minEntries", "normalTest");
+        //this->constructMap(ContentsWithinExpectedASROOT::getAlgoName(), "minCont", "maxCont"); 
 
 }
   
