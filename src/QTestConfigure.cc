@@ -140,8 +140,8 @@ void QTestConfigure::EnableYRangeTest(std::string testName, std::map<std::string
 	me_qc1->setAllowedYRange(ymin,ymax);
 
         //do a Normal test or AS ?
-        unsigned int normalTest=(unsigned int)atof(params["normalTest"].c_str());	
-	me_qc1->setNormalTest(normalTest);
+        unsigned int useEmptyBins=(unsigned int)atof(params["useEmptyBins"].c_str());	
+	me_qc1->setUseEmptyBins(useEmptyBins);
 
 	double warning=atof(params["warning"].c_str());
 	double error=atof(params["error"].c_str());
@@ -277,8 +277,8 @@ void QTestConfigure::EnableContentsWithinExpectedTest(std::string testName, std:
 
 
         //do a Normal test or AS ?
-        unsigned int normalTest=(unsigned int)atof(params["normalTest"].c_str());	
-	me_qc1->setNormalTest(normalTest);
+        unsigned int useEmptyBins=(unsigned int)atof(params["useEmptyBins"].c_str());	
+	me_qc1->setUseEmptyBins(useEmptyBins);
 
         double warning=atof(params["warning"].c_str());
         double error=atof(params["error"].c_str());

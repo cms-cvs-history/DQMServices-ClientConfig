@@ -15,7 +15,7 @@
 QTestParameterNames::QTestParameterNames(){
 	
 	this->constructMap(ContentsXRangeROOT::getAlgoName(), "xmin", "xmax");
-	this->constructMap(ContentsYRangeROOT::getAlgoName(), "ymin", "ymax","normalTest");
+	this->constructMap(ContentsYRangeROOT::getAlgoName(), "ymin", "ymax","useEmptyBins");
 	this->constructMap(DeadChannelROOT::getAlgoName(),   "threshold");
 	this->constructMap(NoisyChannelROOT::getAlgoName(),  "tolerance", "neighbours");
 	this->constructMap(MeanWithinExpectedROOT::getAlgoName(), "mean","useRMS","useSigma","useRange","xmin","xmax");
@@ -26,7 +26,7 @@ QTestParameterNames::QTestParameterNames(){
         this->constructMap(Comp2RefKolmogorovROOT::getAlgoName(), "testparam");
 
 //        this->constructMap(MostProbableLandauROOT::getAlgoName(), "xmin", "xmax","normalization", "mostprobable", "sigma");
-        this->constructMap(ContentsWithinExpectedROOT::getAlgoName(), "minMean", "maxMean", "minRMS", "maxRMS", "toleranceMean", "minEntries", "normalTest");
+        this->constructMap(ContentsWithinExpectedROOT::getAlgoName(), "minMean", "maxMean", "minRMS", "maxRMS", "toleranceMean", "minEntries", "useEmptyBins");
         //this->constructMap(ContentsWithinExpectedASROOT::getAlgoName(), "minCont", "maxCont"); 
 
 }
