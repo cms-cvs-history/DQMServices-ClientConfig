@@ -2,8 +2,8 @@
  *  Class:DQMGenericClient 
  *
  *
- *  $Date: 2009/04/07 17:26:41 $
- *  $Revision: 1.4 $
+ *  $Date: 2009/08/25 21:01:44 $
+ *  $Revision: 1.9 $
  * 
  *  \author Junghwan Goh - SungKyunKwan University
  */
@@ -14,9 +14,13 @@
 #include "DQMServices/Core/interface/DQMStore.h"
 #include "DQMServices/Core/interface/MonitorElement.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
+#include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 #include <TH1F.h>
 #include <cmath>
+#include <TClass.h>
+#include <TString.h>
+
 
 using namespace std;
 using namespace edm;
@@ -43,13 +47,23 @@ DQMGenericClient::DQMGenericClient(const ParameterSet& pset)
   isWildcardUsed_ = false;
 }
 
-void DQMGenericClient::endJob()
-{
+void DQMGenericClient::endRun(const edm::Run& r, const edm::EventSetup& c) {
+
+  // Update 2009-09-23
+  // Migrated all code from endJob to this function
+  // endJob is not necessarily called in the proper sequence
+  // and does not necessarily book histograms produced in
+  // that step.
+  // It more robust to do the histogram manipulation in
+  // this endRun function
+
+
+  
   theDQM = 0;
   theDQM = Service<DQMStore>().operator->();
 
   if ( ! theDQM ) {
-    LogError("DQMGenericClient") << "Cannot create DQMStore instance\n";
+    LogInfo("DQMGenericClient") << "Cannot create DQMStore instance\n";
     return;
   }
 
@@ -69,18 +83,18 @@ void DQMGenericClient::endJob()
       const string::size_type shiftPos = subDir.rfind('/');
       const string searchPath = subDir.substr(0, shiftPos);
       string  startDir = subDir.substr(0, shiftPos);
-      std::cout << "\n\n\n\nLooking for all subdirs of " << subDir << std::endl;
+      //std::cout << "\n\n\n\nLooking for all subdirs of " << subDir << std::endl;
       
       findAllSubdirectories ( startDir, &subDirSet);
       std::set <std::string>::const_iterator iFoundDir;
-      for (iFoundDir = subDirSet.begin();
-           iFoundDir != subDirSet.end();
-           iFoundDir ++) {
+      //for (iFoundDir = subDirSet.begin();
+      //     iFoundDir != subDirSet.end();
+      //     iFoundDir ++) {
         
-        std::cout << "Found subdirectory = " << *iFoundDir
-                  << std::endl;
+        //std::cout << "Found subdirectory = " << *iFoundDir
+        //          << std::endl;
 
-      }
+      //}
         
       //      theDQM->cd(searchPath);
 
@@ -120,7 +134,7 @@ void DQMGenericClient::endJob()
       }
 
       if ( args.size() < 4 ) {
-        LogError("DQMGenericClient") << "Wrong input to effCmds\n";
+        LogInfo("DQMGenericClient") << "Wrong input to effCmds\n";
         continue;
       }
 
@@ -142,7 +156,7 @@ void DQMGenericClient::endJob()
       }
 
       if ( args.size() != 3 ) {
-        LogError("DQMGenericClient") << "Wrong input to resCmds\n";
+        LogInfo("DQMGenericClient") << "Wrong input to resCmds\n";
         continue;
       }
 
@@ -156,13 +170,13 @@ void DQMGenericClient::endJob()
 
       vector<string> args;
       for(boost::tokenizer<elsc>::const_iterator iToken = tokens.begin();
-         iToken != tokens.end(); ++iToken) {
+          iToken != tokens.end(); ++iToken) {
         if ( iToken->empty() ) continue;
         args.push_back(*iToken);
       }
 
       if ( args.size() != 1 ) {
-        LogError("DQMGenericClient") << "Wrong input to normCmds\n";
+        LogInfo("DQMGenericClient") << "Wrong input to normCmds\n";
         continue;
       }
 
@@ -170,29 +184,41 @@ void DQMGenericClient::endJob()
     }
 
     for(vstring::const_iterator iCmd = cdCmds_.begin();
-       iCmd != cdCmds_.end(); ++ iCmd) {
-     if ( iCmd->empty() ) continue;
-     boost::tokenizer<elsc> tokens(*iCmd, elsc("\\", " \t", "\'"));
+        iCmd != cdCmds_.end(); ++ iCmd) {
+      if ( iCmd->empty() ) continue;
+      boost::tokenizer<elsc> tokens(*iCmd, elsc("\\", " \t", "\'"));
 
-     vector<string> args;
-     for(boost::tokenizer<elsc>::const_iterator iToken = tokens.begin();
-         iToken != tokens.end(); ++iToken) {
-       if ( iToken->empty() ) continue;
-       args.push_back(*iToken);
-     }
+      vector<string> args;
+      for(boost::tokenizer<elsc>::const_iterator iToken = tokens.begin();
+          iToken != tokens.end(); ++iToken) {
+        if ( iToken->empty() ) continue;
+        args.push_back(*iToken);
+      }
 
-     if ( args.size() != 1 ) {
-       LogError("DQMGenericClient") << "Wrong input to cdCmds\n";
-       continue;
-     }
+      if ( args.size() != 1 ) {
+        LogInfo("DQMGenericClient") << "Wrong input to cdCmds\n";
+        continue;
+      }
 
-     makeCumulativeDist(dirName, args[0]);
-   }
+      makeCumulativeDist(dirName, args[0]);
+    }
   }
 
-  if ( verbose_ > 0 ) theDQM->showDirStructure();
+  //if ( verbose_ > 0 ) theDQM->showDirStructure();
 
   if ( ! outputFileName_.empty() ) theDQM->save(outputFileName_);
+  
+}
+
+void DQMGenericClient::endJob()
+{
+
+  // Update 2009-09-23
+  // Migrated all code from here to endRun
+
+  LogTrace ("DQMGenericClient") << "inside of DQMGenericClient::endJob()"
+                                << endl;
+
 }
 
 void DQMGenericClient::computeEfficiency(const string& startDir, const string& efficMEName, const string& efficMETitle,
@@ -200,7 +226,7 @@ void DQMGenericClient::computeEfficiency(const string& startDir, const string& e
 {
   if ( ! theDQM->dirExists(startDir) ) {
     if ( verbose_ >= 2 || (verbose_ == 1 && !isWildcardUsed_) ) {
-      LogWarning("DQMGenericClient") << "computeEfficiency() : "
+      LogInfo("DQMGenericClient") << "computeEfficiency() : "
                                   << "Cannot find sub-directory " << startDir << endl; 
     }
     return;
@@ -213,7 +239,7 @@ void DQMGenericClient::computeEfficiency(const string& startDir, const string& e
 
   if ( !simME ) {
     if ( verbose_ >= 2 || (verbose_ == 1 && !isWildcardUsed_) ) {
-      LogWarning("DQMGenericClient") << "computeEfficiency() : "
+      LogInfo("DQMGenericClient") << "computeEfficiency() : "
                                   << "No sim-ME '" << simMEName << "' found\n";
     }
     return;
@@ -221,18 +247,21 @@ void DQMGenericClient::computeEfficiency(const string& startDir, const string& e
 
   if ( !recoME ) {
     if ( verbose_ >= 2 || (verbose_ == 1 && !isWildcardUsed_) ) {
-      LogWarning("DQMGenericClient") << "computeEfficiency() : " 
+      LogInfo("DQMGenericClient") << "computeEfficiency() : " 
                                   << "No reco-ME '" << recoMEName << "' found\n";
     }
     return;
   }
 
-  TH1F* hSim  = simME ->getTH1F();
-  TH1F* hReco = recoME->getTH1F();
+  // Treat everything as the base class, TH1
+  
+  TH1* hSim  = simME ->getTH1();
+  TH1* hReco = recoME->getTH1();
+  
   if ( !hSim || !hReco ) {
     if ( verbose_ >= 2 || (verbose_ == 1 && !isWildcardUsed_) ) {
-      LogWarning("DQMGenericClient") << "computeEfficiency() : "
-                                  << "Cannot create TH1F from ME\n";
+      LogInfo("DQMGenericClient") << "computeEfficiency() : "
+                                  << "Cannot create TH1 from ME\n";
     }
     return;
   }
@@ -245,38 +274,65 @@ void DQMGenericClient::computeEfficiency(const string& startDir, const string& e
     newEfficMEName.erase(0, shiftPos+1);
   }
   theDQM->setCurrentFolder(efficDir);
-  ME* efficME = theDQM->book1D(newEfficMEName, efficMETitle, hSim->GetNbinsX(), hSim->GetXaxis()->GetXmin(), hSim->GetXaxis()->GetXmax()); 
+
+  TH1* efficHist = (TH1*)hSim->Clone(newEfficMEName.c_str());
+  efficHist->SetTitle(efficMETitle.c_str());
+
+  // Here is where you have trouble --- you need
+  // to understand what type of hist you have.
+
+  ME* efficME = 0;
+
+  // Parse the class name
+  // This works, but there might be a better way
+  TClass * myHistClass = efficHist->IsA();
+  TString histClassName = myHistClass->GetName();
+  
+  if (histClassName == "TH1F"){
+    efficME = theDQM->book1D(newEfficMEName, (TH1F*)efficHist);
+  } else if (histClassName == "TH2F"){
+    efficME = theDQM->book2D(newEfficMEName, (TH2F*)efficHist);    
+  } else if (histClassName == "TH3F"){
+    efficME = theDQM->book3D(newEfficMEName, (TH3F*)efficHist);    
+  } 
+  
 
   if ( !efficME ) {
-    LogWarning("DQMGenericClient") << "computeEfficiency() : "
+    LogInfo("DQMGenericClient") << "computeEfficiency() : "
                                 << "Cannot book effic-ME from the DQM\n";
     return;
   }
 
-  const int nBin = efficME->getNbinsX();
-  for(int bin = 0; bin <= nBin; ++bin) {
-    const float nSim  = simME ->getBinContent(bin);
-    const float nReco = recoME->getBinContent(bin);
-    float eff =0;
-    if (type=="fake")eff = nSim ? 1-nReco/nSim : 0.;
-    else eff= nSim ? nReco/nSim : 0.;
-    const float err = nSim && eff <= 1 ? sqrt(eff*(1-eff)/nSim) : 0.;
-    efficME->setBinContent(bin, eff);
-    efficME->setBinError(bin, err);
-  }
+  // Update: 2009-9-16 slaunwhj
+  // call the most generic efficiency function
+  // works up to 3-d histograms
+
+  generic_eff (hSim, hReco, efficME);
+  
+  //   const int nBin = efficME->getNbinsX();
+  //   for(int bin = 0; bin <= nBin; ++bin) {
+  //     const float nSim  = simME ->getBinContent(bin);
+  //     const float nReco = recoME->getBinContent(bin);
+  //     float eff =0;
+  //     if (type=="fake")eff = nSim ? 1-nReco/nSim : 0.;
+  //     else eff= nSim ? nReco/nSim : 0.;
+  //     const float err = nSim && eff <= 1 ? sqrt(eff*(1-eff)/nSim) : 0.;
+  //     efficME->setBinContent(bin, eff);
+  //     efficME->setBinError(bin, err);
+  //   }
   efficME->setEntries(simME->getEntries());
 
   // Global efficiency
   ME* globalEfficME = theDQM->get(efficDir+"/globalEfficiencies");
   if ( !globalEfficME ) globalEfficME = theDQM->book1D("globalEfficiencies", "Global efficiencies", 1, 0, 1);
   if ( !globalEfficME ) {
-    LogError("DQMGenericClient") << "computeEfficiency() : "
+    LogInfo("DQMGenericClient") << "computeEfficiency() : "
                               << "Cannot book globalEffic-ME from the DQM\n";
     return;
   }
   TH1F* hGlobalEffic = globalEfficME->getTH1F();
   if ( !hGlobalEffic ) {
-    LogError("DQMGenericClient") << "computeEfficiency() : "
+    LogInfo("DQMGenericClient") << "computeEfficiency() : "
                               << "Cannot create TH1F from ME, globalEfficME\n";
     return;
   }
@@ -298,7 +354,7 @@ void DQMGenericClient::computeResolution(const string& startDir, const string& n
 {
   if ( ! theDQM->dirExists(startDir) ) {
     if ( verbose_ >= 2 || (verbose_ == 1 && !isWildcardUsed_) ) {
-      LogWarning("DQMGenericClient") << "computeResolution() : "
+      LogInfo("DQMGenericClient") << "computeResolution() : "
                                   << "Cannot find sub-directory " << startDir << endl;
     }
     return;
@@ -309,7 +365,7 @@ void DQMGenericClient::computeResolution(const string& startDir, const string& n
   ME* srcME = theDQM->get(startDir+"/"+srcName);
   if ( !srcME ) {
     if ( verbose_ >= 2 || (verbose_ == 1 && !isWildcardUsed_) ) {
-      LogWarning("DQMGenericClient") << "computeResolution() : "
+      LogInfo("DQMGenericClient") << "computeResolution() : "
                                   << "No source ME '" << srcName << "' found\n";
     }
     return;
@@ -318,7 +374,7 @@ void DQMGenericClient::computeResolution(const string& startDir, const string& n
   TH2F* hSrc = srcME->getTH2F();
   if ( !hSrc ) {
     if ( verbose_ >= 2 || (verbose_ == 1 && !isWildcardUsed_) ) {
-      LogWarning("DQMGenericClient") << "computeResolution() : "
+      LogInfo("DQMGenericClient") << "computeResolution() : "
                                   << "Cannot create TH2F from source-ME\n";
     }
     return;
@@ -356,7 +412,7 @@ void DQMGenericClient::normalizeToEntries(const std::string& startDir, const std
 {
   if ( ! theDQM->dirExists(startDir) ) {
     if ( verbose_ >= 2 || (verbose_ == 1 && !isWildcardUsed_) ) {
-      LogWarning("DQMGenericClient") << "normalizeToEntries() : "
+      LogInfo("DQMGenericClient") << "normalizeToEntries() : "
                                      << "Cannot find sub-directory " << startDir << endl;
     }
     return;
@@ -368,7 +424,7 @@ void DQMGenericClient::normalizeToEntries(const std::string& startDir, const std
 
   if ( !element ) {
     if ( verbose_ >= 2 || (verbose_ == 1 && !isWildcardUsed_) ) {
-      LogWarning("DQMGenericClient") << "normalizeToEntries() : "
+      LogInfo("DQMGenericClient") << "normalizeToEntries() : "
                                      << "No such element '" << histName << "' found\n";
     }
     return;
@@ -377,7 +433,7 @@ void DQMGenericClient::normalizeToEntries(const std::string& startDir, const std
   TH1F* hist  = element->getTH1F();
   if ( !hist) {
     if ( verbose_ >= 2 || (verbose_ == 1 && !isWildcardUsed_) ) {
-      LogWarning("DQMGenericClient") << "normalizeToEntries() : "
+      LogInfo("DQMGenericClient") << "normalizeToEntries() : "
                                      << "Cannot create TH1F from ME\n";
     }
     return;
@@ -388,7 +444,7 @@ void DQMGenericClient::normalizeToEntries(const std::string& startDir, const std
     hist->Scale(1./entries);
   }
   else {
-    LogWarning("DQMGenericClient") << "normalizeToEntries() : " 
+    LogInfo("DQMGenericClient") << "normalizeToEntries() : " 
                                    << "Zero entries in histogram\n";
   }
 
@@ -399,7 +455,7 @@ void DQMGenericClient::makeCumulativeDist(const std::string& startDir, const std
 {
   if ( ! theDQM->dirExists(startDir) ) {
     if ( verbose_ >= 2 || (verbose_ == 1 && !isWildcardUsed_) ) {
-      LogWarning("DQMGenericClient") << "makeCumulativeDist() : "
+      LogInfo("DQMGenericClient") << "makeCumulativeDist() : "
                                      << "Cannot find sub-directory " << startDir << endl;
     }
     return;
@@ -411,7 +467,7 @@ void DQMGenericClient::makeCumulativeDist(const std::string& startDir, const std
 
   if ( !element_cd ) {
     if ( verbose_ >= 2 || (verbose_ == 1 && !isWildcardUsed_) ) {
-      LogWarning("DQMGenericClient") << "makeCumulativeDist() : "
+      LogInfo("DQMGenericClient") << "makeCumulativeDist() : "
                                      << "No such element '" << cdName << "' found\n";
     }
     return;
@@ -421,7 +477,7 @@ void DQMGenericClient::makeCumulativeDist(const std::string& startDir, const std
 
   if ( !cd ) {
     if ( verbose_ >= 2 || (verbose_ == 1 && !isWildcardUsed_) ) {
-      LogWarning("DQMGenericClient") << "makeCumulativeDist() : "
+      LogInfo("DQMGenericClient") << "makeCumulativeDist() : "
                                      << "Cannot create TH1F from ME\n";
     }
     return;
@@ -485,11 +541,11 @@ void DQMGenericClient::limitedFit(MonitorElement * srcME, MonitorElement * meanM
 
 void DQMGenericClient::findAllSubdirectories (std::string dir, std::set<std::string> * myList){
 
-  std::cout << "Looking for directory " << dir ;
+  //std::cout << "Looking for directory " << dir ;
   if (theDQM->dirExists(dir)){
-    std::cout << "... it exists! Inserting it into the list ";
+    //std::cout << "... it exists! Inserting it into the list ";
     myList->insert(dir);
-    std::cout << "... now list has size " << myList->size() << std::endl;
+    //std::cout << "... now list has size " << myList->size() << std::endl;
       
     theDQM->cd(dir);
     vector <string> foundDirs = theDQM->getSubdirs();
@@ -499,7 +555,7 @@ void DQMGenericClient::findAllSubdirectories (std::string dir, std::set<std::str
       //myList.insert((*iDir));
     }
   } else {
-    std::cout << "... DOES NOT EXIST!!! Skip bogus dir" << std::endl;
+    //std::cout << "... DOES NOT EXIST!!! Skip bogus dir" << std::endl;
     
     LogInfo ("DQMGenericClient") << "Trying to find sub-directories of " << dir
                                  << " failed because " << dir  << " does not exist";
@@ -508,6 +564,49 @@ void DQMGenericClient::findAllSubdirectories (std::string dir, std::set<std::str
   return;
   
 }
+
+
+void DQMGenericClient::generic_eff (TH1* denom, TH1* numer, MonitorElement* efficiencyHist) {
+
+
+  
+  
+  for (int iBinX = 1; iBinX < denom->GetNbinsX()+1; iBinX++){
+    for (int iBinY = 1; iBinY < denom->GetNbinsY()+1; iBinY++){
+      for (int iBinZ = 1; iBinZ < denom->GetNbinsZ()+1; iBinZ++){
+
+        int globalBinNum = denom->GetBin(iBinX, iBinY, iBinZ);
+        
+               
+        float numerVal = numer->GetBinContent(globalBinNum);
+        float denomVal = denom->GetBinContent(globalBinNum);
+
+        float effVal = denomVal ? numerVal / denomVal : 0;
+
+        float errVal = (denomVal && (effVal <=1)) ? sqrt(effVal*(1-effVal)/denomVal) : 0;
+
+        LogDebug ("DQMGenericClient") << "(iBinX, iBinY, iBinZ)  = "
+             << iBinX << ", "
+             << iBinY << ", "
+             << iBinZ << "), global bin =  "  << globalBinNum
+             << "eff = " << numerVal << "  /  " << denomVal
+             << " =  " << effVal 
+             << " ... setting the error for that bin ... " << endl
+             << endl;
+
+        
+        efficiencyHist->setBinContent(globalBinNum, effVal);
+        efficiencyHist->setBinError(globalBinNum, errVal);
+      }
+    }
+  }
+
+  //efficiencyHist->setMinimum(0.0);
+  //efficiencyHist->setMaximum(1.0);
+
+
+}
+
 
 
 /* vim:set ts=2 sts=2 sw=2 expandtab: */
